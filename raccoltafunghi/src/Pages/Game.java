@@ -18,6 +18,7 @@ public class Game extends JPanel {
     private ArrayList<Integer> giocatoriY;
     private ArrayList<Integer> funghiX;
     private ArrayList<Integer> funghiY;
+    private ArrayList<Integer> funghi;
 
     private ConnessioneAServer connection = new ConnessioneAServer("localhost", 1775);
     private int id;
@@ -34,37 +35,37 @@ public class Game extends JPanel {
         this.id = id;
 
         try {
-            blockTexture = ImageIO.read(new File("Resources/block.png"));
+            blockTexture = ImageIO.read(getClass().getResource("../Resources/block.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            playerTexture = ImageIO.read(new File("Resources/player.png"));
+            playerTexture = ImageIO.read(getClass().getResource("../Resources/player.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            fungo0Texture = ImageIO.read(new File("Resources/fungo0.png"));
+            fungo0Texture = ImageIO.read(getClass().getResource("../Resources/fungo0.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            fungo1Texture = ImageIO.read(new File("Resources/fungo1.png"));
+            fungo1Texture = ImageIO.read(getClass().getResource("../Resources/fungo1.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            fungo2Texture = ImageIO.read(new File("Resources/fungo2.png"));
+            fungo2Texture = ImageIO.read(getClass().getResource("../Resources/fungo2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            fungo3Texture = ImageIO.read(new File("Resources/fungo3.png"));
+            fungo3Texture = ImageIO.read(getClass().getResource("../Resources/fungo3.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,13 +85,11 @@ public class Game extends JPanel {
         });
 
         int delay = 240;
-        new Timer(delay, new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+        new Timer(delay, e -> {
                 String req = "RS" + id;
                 String input = connection.risposta(req);
                 parseMap(input);
                 repaint();
-            }
         }).start();
     }
 
@@ -101,11 +100,35 @@ public class Game extends JPanel {
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        int x = 0;
+        int y = 0;
+
         for(int i = 0; i < height - 1; i++) {
             for(int j = 0; j < width - 1; j++) {
                 if(checkPlayer(j, i)) {
-
+                    g2.drawImage(playerTexture, i, i, 14, 14, null);
+                    x += 14;
                 }
+                else if(checkMushrooms(j, i)) {
+                    if(funghi.get(i * width + j) == 0) {
+                        g2.drawImage(fungo0Texture, x, y, 14, 14, null);
+                    }
+                    else if(funghi.get(i * width + j) == 1) {
+                        g2.drawImage(fungo1Texture, x, y, 14, 14, null);
+                    }
+                    else if(funghi.get(i * width + j) == 2) {
+                        g2.drawImage(fungo2Texture, x, y, 14, 14, null);
+                    }
+                    else if(funghi.get(i * width + j) == 3) {
+                        g2.drawImage(fungo3Texture, x, y, 14, 14, null);
+                    }
+                    x += 14;
+                }
+                else {
+                    g2.drawImage(blockTexture, x, y, 14, 14, null);
+                    x += 14;
+                }
+                y += 14;
             }
         }
     }
@@ -133,6 +156,7 @@ public class Game extends JPanel {
         giocatoriY.clear();
         funghiX.clear();
         funghiY.clear();
+        funghi.clear();
 
         String[] parti = input.split("\\|\\|");
         if (parti.length != 2) return;
@@ -153,8 +177,10 @@ public class Game extends JPanel {
 
         for (int i = 0; i + 2 < datiFunghi.length; i += 3) {
             try {
+                int valore = Integer.parseInt(datiFunghi[i]);
                 int x = Integer.parseInt(datiFunghi[i + 1]);
                 int y = Integer.parseInt(datiFunghi[i + 2]);
+                funghi.add(valore);
                 funghiX.add(x);
                 funghiY.add(y);
             } catch (NumberFormatException e) {
@@ -162,4 +188,5 @@ public class Game extends JPanel {
             }
         }
     }
+
 }
