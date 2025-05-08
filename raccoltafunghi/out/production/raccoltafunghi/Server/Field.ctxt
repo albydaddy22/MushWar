@@ -1,0 +1,23 @@
+#BlueJ class context
+comment0.target=Field
+comment1.params=
+comment1.target=Field()
+comment10.params=pos
+comment10.target=int\ posIsOccupied(Position)
+comment2.params=
+comment2.target=java.util.ArrayList\ getPlayers()
+comment3.params=players
+comment3.target=void\ setPlayers(java.util.ArrayList)
+comment4.params=player
+comment4.target=void\ addPlayer(Player)
+comment5.params=
+comment5.target=java.util.ArrayList\ getMushrooms()
+comment6.params=mushrooms
+comment6.target=void\ setMushrooms(java.util.ArrayList)
+comment7.params=mushroom
+comment7.target=void\ addMushroom(Mushroom)
+comment8.params=str
+comment8.target=boolean\ userIsPresent(java.lang.String)
+comment9.params=userID
+comment9.target=Player\ findPlayer(java.lang.String)
+numComments=11

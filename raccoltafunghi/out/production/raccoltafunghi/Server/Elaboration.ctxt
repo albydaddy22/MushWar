@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Elaboration
+comment1.params=client\ field
+comment1.target=Elaboration(java.net.Socket,\ Field)
+comment2.params=
+comment2.target=void\ run()
+comment3.params=req
+comment3.target=java.lang.String\ elaborazione(java.lang.String)
+comment4.params=req
+comment4.target=java.lang.String\ openSession(java.lang.String)
+comment5.params=req
+comment5.target=java.lang.String\ movePlayer(java.lang.String)
+comment6.params=req
+comment6.target=java.lang.String\ printScoreBoard(java.lang.String)
+comment7.params=req
+comment7.target=java.lang.String\ takeState(java.lang.String)
+comment8.params=req
+comment8.target=java.lang.String\ closeSession(java.lang.String)
+numComments=9

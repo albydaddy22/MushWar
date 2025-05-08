@@ -15,12 +15,12 @@ public class Leaderboard extends JPanel {
     private ArrayList<String> usernames;
     private ArrayList<String> points;
 
-    //private ConnessioneAServer connection = new ConnessioneAServer("localhost", 1775);
-    private int id;
+    private ConnessioneAServer connection = new ConnessioneAServer("localhost", 1775);
+    private String id;
 
     private JPanel leaderboardPanel;
 
-    public Leaderboard(int id) {
+    public Leaderboard(String id) {
         this.id = id;
 
         setLayout(new BorderLayout());
@@ -40,22 +40,30 @@ public class Leaderboard extends JPanel {
         exitbtn.setFont(new Font("Arial", Font.BOLD, 16));
 
         JPanel exitPanel = new JPanel(new BorderLayout());
-        exitPanel.setPreferredSize(new Dimension(getWidth(), getHeight() / 3));
+        exitPanel.setPreferredSize(new Dimension(1, 400));
         exitPanel.add(exitbtn, BorderLayout.NORTH);
 
         add(leaderboardPanel, BorderLayout.CENTER);
         add(exitPanel, BorderLayout.SOUTH);
 
-        /*int delay = 240;
+        int delay = 240;
         new Timer(delay, e -> {
             String req = "RT" + id;
             String input = connection.risposta(req);
             parseLeaderboard(input);
             repaint();
-        }).start();*/
+        }).start();
 
-        //String mammt = "Elby|12|Cotti|6|Ditullo|9|Gay|90";
-        //parseLeaderboard(mammt);
+        exitbtn.addActionListener(e -> {
+            String req = "KO" + id;
+            connection.risposta(req);
+
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window instanceof JFrame) {
+                ((JFrame) window).dispose();
+            }
+        });
+
     }
 
     public void parseLeaderboard(String input) {

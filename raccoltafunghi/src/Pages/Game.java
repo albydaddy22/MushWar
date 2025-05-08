@@ -14,62 +14,39 @@ public class Game extends JPanel {
 
     private int width = 100;
     private int height = 70;
-    private ArrayList<Integer> giocatoriX;
-    private ArrayList<Integer> giocatoriY;
-    private ArrayList<Integer> funghiX;
-    private ArrayList<Integer> funghiY;
-    private ArrayList<Integer> funghi;
+
+    private ArrayList<Integer> giocatoriX = new ArrayList<>();
+    private ArrayList<Integer> giocatoriY = new ArrayList<>();
+    private ArrayList<Integer> funghiX = new ArrayList<>();
+    private ArrayList<Integer> funghiY = new ArrayList<>();
+    private ArrayList<Integer> funghi = new ArrayList<>();
 
     private ConnessioneAServer connection = new ConnessioneAServer("localhost", 1775);
-    private int id;
-    private boolean up, down, left, right;
+    private String id;
 
-    BufferedImage playerTexture;
-    BufferedImage fungo0Texture;
-    BufferedImage fungo1Texture;
-    BufferedImage fungo2Texture;
-    BufferedImage fungo3Texture;
-    BufferedImage blockTexture;
+    private BufferedImage playerTexture;
+    private BufferedImage fungo0Texture;
+    private BufferedImage fungo1Texture;
+    private BufferedImage fungo2Texture;
+    private BufferedImage fungo3Texture;
+    private BufferedImage blockTexture;
 
-    public Game(int id) {
+    public Game(String id) {
         this.id = id;
 
-        try {
-            blockTexture = ImageIO.read(getClass().getResource("../Resources/block.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        setFocusable(true);
+        requestFocusInWindow();
+        setPreferredSize(new Dimension(width * 14, height * 14));
 
-        try {
-            playerTexture = ImageIO.read(getClass().getResource("../Resources/player.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Caricamento immagini
+        playerTexture = loadImage("../Resources/player.png");
+        fungo0Texture = loadImage("../Resources/fungo0.png");
+        fungo1Texture = loadImage("../Resources/fungo1.png");
+        fungo2Texture = loadImage("../Resources/fungo2.png");
+        fungo3Texture = loadImage("../Resources/fungo3.png");
+        blockTexture = loadImage("../Resources/block.png");
 
-        try {
-            fungo0Texture = ImageIO.read(getClass().getResource("../Resources/fungo0.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            fungo1Texture = ImageIO.read(getClass().getResource("../Resources/fungo1.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            fungo2Texture = ImageIO.read(getClass().getResource("../Resources/fungo2.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            fungo3Texture = ImageIO.read(getClass().getResource("../Resources/fungo3.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        // Gestione input tastiera
         addKeyListener(new KeyAdapter() {
             String req = "MO";
 
@@ -84,13 +61,23 @@ public class Game extends JPanel {
             }
         });
 
+        // Timer per aggiornare lo stato del gioco
         int delay = 240;
         new Timer(delay, e -> {
-                String req = "RS" + id;
-                String input = connection.risposta(req);
-                parseMap(input);
-                repaint();
+            String req = "RS" + id;
+            String input = connection.risposta(req);
+            parseMap(input);
+            repaint();
         }).start();
+    }
+
+    private BufferedImage loadImage(String path) {
+        try {
+            return ImageIO.read(getClass().getResource(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -100,55 +87,54 @@ public class Game extends JPanel {
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int x = 0;
-        int y = 0;
-
-        for(int i = 0; i < height - 1; i++) {
-            for(int j = 0; j < width - 1; j++) {
-                if(checkPlayer(j, i)) {
-                    g2.drawImage(playerTexture, i, i, 14, 14, null);
-                    x += 14;
+        for (int y = 0; y < height; y++) {
+            int px = 0;
+            for (int x = 0; x < width; x++) {
+                if (checkPlayer(x, y)) {
+                    g2.drawImage(playerTexture, px, y * 14, 14, 14, null);
+                } else if (checkMushrooms(x, y)) {
+                    int index = getFungoIndexAt(x, y);
+                    if (index != -1) {
+                        switch (funghi.get(index)) {
+                            case 0 -> g2.drawImage(fungo0Texture, px, y * 14, 14, 14, null);
+                            case 1 -> g2.drawImage(fungo1Texture, px, y * 14, 14, 14, null);
+                            case 2 -> g2.drawImage(fungo2Texture, px, y * 14, 14, 14, null);
+                            case 3 -> g2.drawImage(fungo3Texture, px, y * 14, 14, 14, null);
+                        }
+                    }
+                } else {
+                    g2.drawImage(blockTexture, px, y * 14, 14, 14, null);
                 }
-                else if(checkMushrooms(j, i)) {
-                    if(funghi.get(i * width + j) == 0) {
-                        g2.drawImage(fungo0Texture, x, y, 14, 14, null);
-                    }
-                    else if(funghi.get(i * width + j) == 1) {
-                        g2.drawImage(fungo1Texture, x, y, 14, 14, null);
-                    }
-                    else if(funghi.get(i * width + j) == 2) {
-                        g2.drawImage(fungo2Texture, x, y, 14, 14, null);
-                    }
-                    else if(funghi.get(i * width + j) == 3) {
-                        g2.drawImage(fungo3Texture, x, y, 14, 14, null);
-                    }
-                    x += 14;
-                }
-                else {
-                    g2.drawImage(blockTexture, x, y, 14, 14, null);
-                    x += 14;
-                }
-                y += 14;
+                px += 14;
             }
         }
     }
 
-    public boolean checkPlayer(int x, int y) {
-        for(int i = 0; i < giocatoriX.size(); i++) {
-            if(x == giocatoriX.get(i) && y == giocatoriY.get(i)) {
+    private boolean checkPlayer(int x, int y) {
+        for (int i = 0; i < giocatoriX.size(); i++) {
+            if (x == giocatoriX.get(i) && y == giocatoriY.get(i)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean checkMushrooms(int x, int y) {
-        for(int i = 0; i < funghiX.size(); i++) {
-            if(x == funghiX.get(i) && y == funghiY.get(i)) {
+    private boolean checkMushrooms(int x, int y) {
+        for (int i = 0; i < funghiX.size(); i++) {
+            if (x == funghiX.get(i) && y == funghiY.get(i)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private int getFungoIndexAt(int x, int y) {
+        for (int i = 0; i < funghiX.size(); i++) {
+            if (x == funghiX.get(i) && y == funghiY.get(i)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void parseMap(String input) {
@@ -188,5 +174,4 @@ public class Game extends JPanel {
             }
         }
     }
-
 }

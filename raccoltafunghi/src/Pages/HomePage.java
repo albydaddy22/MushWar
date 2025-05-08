@@ -15,7 +15,7 @@ public class HomePage extends JFrame {
 
     private final Color mc = new Color(218, 138, 58);
     private final Color hc = new Color(230, 154, 80);
-    private int id = 0;
+    private String id;
 
     public HomePage() {
         setSize(900, 600);
@@ -44,11 +44,15 @@ public class HomePage extends JFrame {
         container.add(btnPanel);
 
         connectbtn.addActionListener(e -> {
-            String risp = "LG" + connection.risposta(username.getText());
-            if(risp.contains("OK")) {
-                String idString = risp.substring(risp.indexOf('K') + 1, risp.length());
-                id = Integer.parseInt(idString);
+            String req = "LG" + username.getText();
+            String res = connection.risposta(req);
+
+            if(res.contains("OK")) {
+                id = res.substring(res.indexOf('K') + 1, res.length());
+
                 dispose();
+
+                GameFrame g = new GameFrame(id);
             }
             else {
                 JOptionPane.showMessageDialog(null, "Utente già registrato", "Error", JOptionPane.ERROR_MESSAGE);
@@ -60,7 +64,7 @@ public class HomePage extends JFrame {
         setVisible(true);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 }

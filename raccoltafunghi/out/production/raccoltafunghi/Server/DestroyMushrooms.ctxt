@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=DestroyMushrooms
+comment1.params=field
+comment1.target=DestroyMushrooms(Field)
+comment2.params=
+comment2.target=void\ run()
+numComments=3

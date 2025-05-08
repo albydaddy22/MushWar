@@ -1,0 +1,21 @@
+#BlueJ class context
+comment0.target=Mushroom
+comment1.params=
+comment1.target=Mushroom()
+comment2.params=value\ pos\ TTL
+comment2.target=Mushroom(int,\ Position,\ int)
+comment3.params=
+comment3.target=int\ getValue()
+comment4.params=
+comment4.target=Position\ getPos()
+comment5.params=
+comment5.target=int\ getTTL()
+comment6.params=value
+comment6.target=void\ setValue(int)
+comment7.params=pos
+comment7.target=void\ setPos(Position)
+comment8.params=TTL
+comment8.target=void\ setTTL(int)
+comment9.params=o
+comment9.target=boolean\ equals(java.lang.Object)
+numComments=10

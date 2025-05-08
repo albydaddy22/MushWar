@@ -5,9 +5,9 @@ import java.awt.*;
 
 public class GameFrame extends JFrame {
 
-    private int id;
+    private String id;
 
-    public GameFrame(int id) {
+    public GameFrame(String id) {
         this.id = id;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -19,18 +19,14 @@ public class GameFrame extends JFrame {
 
         setLayout(new BorderLayout());
 
-        JPanel game = new JPanel();
+        Game game = new Game(id);
 
-        Leaderboard lb = new Leaderboard(10);
+        Leaderboard lb = new Leaderboard(id);
         lb.setPreferredSize(new Dimension(300, getHeight()));
 
         add(game, BorderLayout.CENTER);
         add(lb, BorderLayout.EAST);
 
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new GameFrame(10);
     }
 }
