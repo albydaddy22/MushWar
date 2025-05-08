@@ -17,6 +17,7 @@ public class Game extends JPanel {
 
     private ArrayList<Integer> giocatoriX = new ArrayList<>();
     private ArrayList<Integer> giocatoriY = new ArrayList<>();
+    private ArrayList<String> giocatoriUsernames = new ArrayList<>();
     private ArrayList<Integer> funghiX = new ArrayList<>();
     private ArrayList<Integer> funghiY = new ArrayList<>();
     private ArrayList<Integer> funghi = new ArrayList<>();
@@ -38,7 +39,6 @@ public class Game extends JPanel {
         requestFocusInWindow();
         setPreferredSize(new Dimension(width * 14, height * 14));
 
-        // Caricamento immagini
         playerTexture = loadImage("../Resources/player.png");
         fungo0Texture = loadImage("../Resources/fungo0.png");
         fungo1Texture = loadImage("../Resources/fungo1.png");
@@ -46,7 +46,6 @@ public class Game extends JPanel {
         fungo3Texture = loadImage("../Resources/fungo3.png");
         blockTexture = loadImage("../Resources/block.png");
 
-        // Gestione input tastiera
         addKeyListener(new KeyAdapter() {
             String req = "MO";
 
@@ -57,14 +56,17 @@ public class Game extends JPanel {
                     case KeyEvent.VK_S -> connection.risposta(req + "SS" + "|" + id);
                     case KeyEvent.VK_A -> connection.risposta(req + "WW" + "|" + id);
                     case KeyEvent.VK_D -> connection.risposta(req + "EE" + "|" + id);
+                    case KeyEvent.VK_UP -> connection.risposta(req + "NN" + "|" + id);
+                    case KeyEvent.VK_DOWN -> connection.risposta(req + "SS" + "|" + id);
+                    case KeyEvent.VK_LEFT -> connection.risposta(req + "WW" + "|" + id);
+                    case KeyEvent.VK_RIGHT -> connection.risposta(req + "EE" + "|" + id);
                 }
             }
         });
 
-        // Timer per aggiornare lo stato del gioco
         int delay = 240;
         new Timer(delay, e -> {
-            String req = "RS" + id;
+            String req = "RT" + id;
             String input = connection.risposta(req);
             parseMap(input);
             repaint();
@@ -91,7 +93,18 @@ public class Game extends JPanel {
             int px = 0;
             for (int x = 0; x < width; x++) {
                 if (checkPlayer(x, y)) {
+                    int playerIndex = getPlayerIndexAt(x, y);
                     g2.drawImage(playerTexture, px, y * 14, 14, 14, null);
+
+                    // Draw username above player
+                    if (playerIndex != -1 && playerIndex < giocatoriUsernames.size()) {
+                        String username = giocatoriUsernames.get(playerIndex);
+                        g2.setColor(Color.WHITE);
+                        g2.setFont(new Font("Arial", Font.BOLD, 10));
+                        FontMetrics metrics = g2.getFontMetrics();
+                        int textWidth = metrics.stringWidth(username);
+                        g2.drawString(username, px + (14 - textWidth) / 2, y * 14 - 2);
+                    }
                 } else if (checkMushrooms(x, y)) {
                     int index = getFungoIndexAt(x, y);
                     if (index != -1) {
@@ -110,13 +123,17 @@ public class Game extends JPanel {
         }
     }
 
-    private boolean checkPlayer(int x, int y) {
+    private int getPlayerIndexAt(int x, int y) {
         for (int i = 0; i < giocatoriX.size(); i++) {
             if (x == giocatoriX.get(i) && y == giocatoriY.get(i)) {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
+    }
+
+    private boolean checkPlayer(int x, int y) {
+        return getPlayerIndexAt(x, y) != -1;
     }
 
     private boolean checkMushrooms(int x, int y) {
@@ -140,6 +157,7 @@ public class Game extends JPanel {
     public void parseMap(String input) {
         giocatoriX.clear();
         giocatoriY.clear();
+        giocatoriUsernames.clear();
         funghiX.clear();
         funghiY.clear();
         funghi.clear();
@@ -152,8 +170,10 @@ public class Game extends JPanel {
 
         for (int i = 0; i + 2 < datiGiocatori.length; i += 3) {
             try {
+                String username = datiGiocatori[i];
                 int x = Integer.parseInt(datiGiocatori[i + 1]);
                 int y = Integer.parseInt(datiGiocatori[i + 2]);
+                giocatoriUsernames.add(username);
                 giocatoriX.add(x);
                 giocatoriY.add(y);
             } catch (NumberFormatException e) {

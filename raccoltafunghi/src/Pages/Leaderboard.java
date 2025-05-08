@@ -48,7 +48,7 @@ public class Leaderboard extends JPanel {
 
         int delay = 240;
         new Timer(delay, e -> {
-            String req = "RT" + id;
+            String req = "RS" + id;
             String input = connection.risposta(req);
             parseLeaderboard(input);
             repaint();
@@ -62,7 +62,10 @@ public class Leaderboard extends JPanel {
             if (window instanceof JFrame) {
                 ((JFrame) window).dispose();
             }
+
+            System.exit(0);
         });
+
 
     }
 
@@ -91,5 +94,7 @@ public class Leaderboard extends JPanel {
             leaderboardPanel.add(userLabel);
             leaderboardPanel.add(pointLabel);
         }
+
+        leaderboardPanel.revalidate();
     }
 }
