@@ -64,7 +64,7 @@ public class Game extends JPanel {
             }
         });
 
-        int delay = 240;
+        int delay = 10;
         new Timer(delay, e -> {
             String req = "RT" + id;
             String input = connection.risposta(req);
@@ -96,7 +96,6 @@ public class Game extends JPanel {
                     int playerIndex = getPlayerIndexAt(x, y);
                     g2.drawImage(playerTexture, px, y * 14, 14, 14, null);
 
-                    // Draw username above player
                     if (playerIndex != -1 && playerIndex < giocatoriUsernames.size()) {
                         String username = giocatoriUsernames.get(playerIndex);
                         g2.setColor(Color.WHITE);

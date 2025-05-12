@@ -35,6 +35,10 @@ public class Leaderboard extends JPanel {
 
         leaderboardPanel = new JPanel(new GridLayout(0, 2, 10, 10));
 
+        JPanel leaderboardWrapper = new JPanel(new BorderLayout());
+        leaderboardWrapper.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 40)); // top, left, bottom, right
+        leaderboardWrapper.add(leaderboardPanel, BorderLayout.CENTER);
+
         ButtonPauroso exitbtn = new ButtonPauroso(mc, Color.WHITE, hc, Color.WHITE, "Exit");
         exitbtn.setPreferredSize(new Dimension(200, 50));
         exitbtn.setFont(new Font("Arial", Font.BOLD, 16));
@@ -43,7 +47,7 @@ public class Leaderboard extends JPanel {
         exitPanel.setPreferredSize(new Dimension(1, 400));
         exitPanel.add(exitbtn, BorderLayout.NORTH);
 
-        add(leaderboardPanel, BorderLayout.CENTER);
+        add(leaderboardWrapper, BorderLayout.CENTER);
         add(exitPanel, BorderLayout.SOUTH);
 
         int delay = 240;
@@ -65,8 +69,6 @@ public class Leaderboard extends JPanel {
 
             System.exit(0);
         });
-
-
     }
 
     public void parseLeaderboard(String input) {
