@@ -1,0 +1,21 @@
+#BlueJ class context
+comment0.target=Game
+comment1.params=id
+comment1.target=Game(java.lang.String)
+comment2.params=e
+comment2.target=void\ keyPressed(java.awt.event.KeyEvent)
+comment3.params=path
+comment3.target=java.awt.image.BufferedImage\ loadImage(java.lang.String)
+comment4.params=g
+comment4.target=void\ paintComponent(java.awt.Graphics)
+comment5.params=x\ y
+comment5.target=int\ getPlayerIndexAt(int,\ int)
+comment6.params=x\ y
+comment6.target=boolean\ checkPlayer(int,\ int)
+comment7.params=x\ y
+comment7.target=boolean\ checkMushrooms(int,\ int)
+comment8.params=x\ y
+comment8.target=int\ getFungoIndexAt(int,\ int)
+comment9.params=input
+comment9.target=void\ parseMap(java.lang.String)
+numComments=10

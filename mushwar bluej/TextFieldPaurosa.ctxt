@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=TextFieldPaurosa
+comment1.params=placeholder
+comment1.target=TextFieldPaurosa(java.lang.String)
+comment2.params=placeholder
+comment2.target=void\ setPlaceholder(java.lang.String)
+comment3.params=
+comment3.target=java.lang.String\ getPlaceholder()
+comment4.params=g
+comment4.target=void\ paintComponent(java.awt.Graphics)
+numComments=5
